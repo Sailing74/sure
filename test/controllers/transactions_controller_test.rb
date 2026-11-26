@@ -2720,6 +2720,38 @@ end
     assert_match(/NOTEVISMARKER/, response.body)
   end
 
+  test "standard list hides notes by default" do
+    family = families(:empty)
+    sign_in users(:empty)
+    family.accounts.each { |a| a.entries.delete_all }
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    create_transaction(account: account, notes: "NOTEVISMARKER hidden by default")
+
+    get transactions_url
+
+    assert_response :success
+    assert_no_match(/NOTEVISMARKER/, response.body)
+  end
+
+  test "standard list shows notes under the transaction when show notes is enabled" do
+    family = families(:empty)
+    sign_in users(:empty)
+    user = users(:empty)
+    user.update!(preferences: (user.preferences || {}).merge("preview_features_enabled" => false, "transactions_show_notes" => true))
+    family.accounts.each { |a| a.entries.delete_all }
+    account = family.accounts.create! name: "Test", balance: 0, currency: "USD", accountable: Depository.new
+    entry = create_transaction(account: account, notes: "NOTEVISMARKER shown in the standard list")
+
+    get transactions_url
+
+    assert_response :success
+    row = Nokogiri::HTML(response.body).at_css("turbo-frame##{ActionView::RecordIdentifier.dom_id(entry)}")
+    assert row, "expected the transaction row to render"
+    note = row.at_css("p.privacy-sensitive[title='NOTEVISMARKER shown in the standard list']")
+    assert note, "expected the note as an extra line in the row"
+    assert_equal "NOTEVISMARKER shown in the standard list", note.text.strip
+  end
+
   test "compact transfer row keeps from-to info in the name tooltip instead of a subtitle" do
     family = families(:empty)
     sign_in users(:empty)

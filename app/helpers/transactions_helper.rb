@@ -149,8 +149,9 @@ module TransactionsHelper
   # - the displayed attributes of the accounts and categories it shows, and
   #   whether an account supports trades (a crypto account's subtype); their
   #   record versions would change on every balance sync or category pick
-  # - per-user or per-request state (locale, user, family display settings,
-  #   whether the user may annotate the account or see the counterpart,
+  # - per-user or per-request state (locale, user and their show-notes
+  #   setting, family display settings, whether the user may annotate the
+  #   account or see the counterpart,
   #   whether the entry is a split parent, grouped rendering, view context)
   # - a digest of the row's templates, the helpers and DS components it
   #   renders and the locale files (TRANSACTION_ROW_SOURCES), plus the image
@@ -177,6 +178,7 @@ module TransactionsHelper
       ENV["BUILD_COMMIT_SHA"].presence || (@app_version ||= Sure.version.to_s),
       I18n.locale,
       Current.user&.id,
+      Current.user&.transactions_show_notes?,
       Current.family&.currency,
       Current.family&.locale,
       view_ctx,

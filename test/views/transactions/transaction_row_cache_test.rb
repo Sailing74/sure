@@ -63,6 +63,17 @@ class Transactions::TransactionRowCacheTest < ActionView::TestCase
     assert_not_equal base, row_key
   end
 
+  test "toggling show notes renders the row fresh" do
+    @entry.update!(notes: "Invoice 4711")
+    assert_not_includes render_row, "Invoice 4711"
+
+    Current.user.update!(preferences: Current.user.preferences.merge("transactions_show_notes" => true))
+    assert_includes render_row, "Invoice 4711"
+
+    Current.user.update!(preferences: Current.user.preferences.merge("transactions_show_notes" => false))
+    assert_not_includes render_row, "Invoice 4711"
+  end
+
   test "the key changes when manual reconciliation is toggled" do
     base = row_key
 

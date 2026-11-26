@@ -122,6 +122,26 @@
       <% end %>
     </div>
 
+    <div class="border-t border-primary mx-3"></div>
+    <div>
+      <%= form_with url: settings_appearance_path, method: :patch,
+            class: "p-3",
+            data: { controller: "auto-submit-form" } do |f| %>
+        <div class="flex cursor-pointer items-center gap-4 justify-between">
+          <div class="text-sm space-y-1">
+            <p class="text-primary font-medium"><%= t(".show_notes_title") %></p>
+            <p class="text-secondary"><%= t(".show_notes_description") %></p>
+          </div>
+          <%= render DS::Toggle.new(
+                id: "user_transactions_show_notes",
+                name: "user[transactions_show_notes]",
+                checked: @user.transactions_show_notes?,
+                data: { auto_submit_form_target: "auto" }
+          ) %>
+        </div>
+      <% end %>
+    </div>
+
     <% if @user.preview_features_enabled? %>
       <div class="border-t border-primary mx-3"></div>
       <div>
@@ -161,28 +181,6 @@
                     id: "user_transactions_group_by_date",
                     name: "user[transactions_group_by_date]",
                     checked: @user.transactions_group_by_date?,
-                    data: { auto_submit_form_target: "auto" }
-              ) %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-
-      <% if @user.transactions_compact? %>
-        <div class="border-t border-primary mx-3"></div>
-        <div>
-          <%= form_with url: settings_appearance_path, method: :patch,
-                class: "p-3",
-                data: { controller: "auto-submit-form" } do |f| %>
-            <div class="flex cursor-pointer items-center gap-4 justify-between">
-              <div class="text-sm space-y-1">
-                <p class="text-primary font-medium"><%= t(".show_notes_title") %></p>
-                <p class="text-secondary"><%= t(".show_notes_description") %></p>
-              </div>
-              <%= render DS::Toggle.new(
-                    id: "user_transactions_show_notes",
-                    name: "user[transactions_show_notes]",
-                    checked: @user.transactions_show_notes?,
                     data: { auto_submit_form_target: "auto" }
               ) %>
             </div>

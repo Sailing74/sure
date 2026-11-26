@@ -103,6 +103,10 @@
                 </div>
 
                 <%= render "transactions/subtitle", entry: entry, transaction: transaction, view_ctx: view_ctx %>
+
+                <% if Current.user&.transactions_show_notes? && entry.notes.present? %>
+                  <p class="truncate text-secondary text-xs font-normal privacy-sensitive" title="<%= entry.notes %>"><%= entry.notes %></p>
+                <% end %>
               </div>
             </div>
           <% end %>

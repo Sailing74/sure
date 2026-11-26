@@ -41,18 +41,16 @@ class Settings::AppearancesControllerTest < ActionDispatch::IntegrationTest
     assert_select "input#user_transactions_show_notes"
   end
 
-  test "show notes toggle is hidden when compact table is disabled" do
-    @user.update!(preferences: (@user.preferences || {}).merge("preview_features_enabled" => true, "transactions_compact" => false))
+  test "show notes toggle is shown without the compact table and preview features" do
+    @user.update!(preferences: (@user.preferences || {}).merge("preview_features_enabled" => false, "transactions_compact" => false))
 
     get settings_appearance_url
 
     assert_response :success
-    assert_select "input#user_transactions_show_notes", count: 0
+    assert_select "input#user_transactions_show_notes"
   end
 
   test "show notes toggle is off by default" do
-    @user.update!(preferences: (@user.preferences || {}).merge("preview_features_enabled" => true, "transactions_compact" => true))
-
     get settings_appearance_url
 
     assert_response :success
@@ -60,8 +58,6 @@ class Settings::AppearancesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "updating show notes persists the preference" do
-    @user.update!(preferences: (@user.preferences || {}).merge("preview_features_enabled" => true, "transactions_compact" => true))
-
     patch settings_appearance_url, params: { user: { transactions_show_notes: "1" } }
 
     assert_redirected_to settings_appearance_url

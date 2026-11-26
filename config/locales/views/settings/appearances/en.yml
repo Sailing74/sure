@@ -20,7 +20,7 @@ en:
         group_by_date_title: Group by date
         group_by_date_description: In the compact table, group transactions by day with date headers. When off, transactions appear in a flat list on both pages.
         show_notes_title: Show notes
-        show_notes_description: In the compact table, show the notes column. When off, notes are hidden to give more room to the transaction and category.
+        show_notes_description: "Also show each transaction's notes in the transaction lists: as an extra line in the standard list, as a column in the compact table. When off, notes only appear in the transaction details."
         per_page_title: Transactions per page
         per_page_description: Default number of transactions shown per page on both pages. You can still change this on either page.
         dashboard_title: Dashboard
